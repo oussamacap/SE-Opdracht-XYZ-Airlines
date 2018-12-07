@@ -10,7 +10,12 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="SE-Opdracht-XYZ-Airlines" target="1.5" />
+      <module name="SE-Opdracht-XYZ-Airlines" target="1.8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="SE-Opdracht-XYZ-Airlines" options="-parameters" />
+    </option>
   </component>
 </project>
