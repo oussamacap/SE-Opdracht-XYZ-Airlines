@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>XYZ Airlines</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/responsive/2.2.2/css/responsive.bootstrap4.min.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/rowgroup/1.1.0/css/rowGroup.bootstrap4.min.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/select/1.2.6/css/select.bootstrap4.min.css"/>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/responsive/2.2.2/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/responsive/2.2.2/js/responsive.bootstrap4.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/rowgroup/1.1.0/js/dataTables.rowGroup.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.4/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/select/1.2.6/js/dataTables.select.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1>XYZ Airlines</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table id="planes" class="table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Fuel</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>Name</th>
+                    <th>Fuel</th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div id="newPlane" tabindex="-1" class="modal fade" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">New Plane</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="planeName">Name: </label><input id="planeName" type="text" required/>
+                        <label for="planeFuel">Fuel: </label><input id="planeFuel" type="text" required/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="postData()">Add Plane</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript" language="JavaScript">
+ var planesTable;
+    $(document).ready(
+        planesTable = function () {
+            return $('#planes').DataTable({
+                "dom": "<'row'<'col-sm-12 col-md-4'l><'col-sm-12 col-md-4'B><'col-sm-12 col-md-4'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                     "buttons": [
+
+                    {
+                        "text": 'Add plane',
+                        "className": "btn",
+                        "init": function (dt, node, config) {
+                            $(node[0]).attr("data-toggle", "modal");
+                            $(node[0]).attr("data-target", "#newPlane");
+                        }
+                    },
+                    {
+                        "extend": 'selected',
+                        "text": 'Flying',
+                        "className": "btn",
+                        "action": function (e, dt, button, config) {
+                            var plane = dt.data()[dt.rows({selected: true})[0]];
+                            Flying(plane);
+                        }
+                    },
+                    {
+                        "extend": 'selected',
+                        "text": 'To Fuel',
+                        "className": "btn",
+                        "action": function (e, dt, button, config) {
+                            var plane = dt.data()[dt.rows({selected: true})[0]];
+                            toFuel(plane)
+                            
+                        }
+                    },
+                    {
+                        "extend": 'selected',
+                        "text": 'Delete',
+                        "className": "btn btn-danger",
+                        "action": function (e, dt, button, config) {
+                            var plane = dt.data()[dt.rows({selected: true})[0]];
+                            deletePlane(plane);
+                        }
+                    }
+                ],
+                 "select": "single",
+                "ajax": {
+                    "url": "http://localhost:8080/api/airplane",
+                    "dataSrc": "_embedded.airplanes"
+                },
+                "columns": [
+                    {"data": "name"},
+                    {"data": "fuel"}
+                ]
+            });
+        }());
+
+    var getPlanes = function () {
+        planesTable.ajax.reload(null, false);
+    };
+
+     var postData = function () {
+        var planeName = $('#planeName').val();
+        //  $('#planeFuel').val() = 5;
+        var planeFuel = $('#planeFuel').val();
+        if (planeName === "") {
+            return;
+        }
+        $.ajax({
+            url: "http://localhost:8080/api/airplane",
+            type: "post",
+            data: JSON.stringify({
+                name: planeName,
+                fuel: planeFuel
+            }),
+            contentType: "application/json",
+            success: function (result) {
+                $('#planeName').val("");
+                $('#newPlane').modal('hide');
+                getPlanes();
+            },
+            error: function (result) {
+                window.alert("Couldn't add plane! " + result.responseText);
+            }
+        });
+    };
+
+    var Flying = function (plane) {
+        if(plane.fuel <= 2){
+            window.alert(plane.name + " has not enough fuel");
+        }else {
+            var planeFuel = plane.fuel - 2;
+        $.ajax({
+            url: plane["_links"]["self"]["href"],
+            type: "patch",
+            data: JSON.stringify({
+               fuel: planeFuel
+            }),
+            contentType: "application/json",
+            success: function (result) {
+                window.alert(plane.name + " has flying away ");
+                getPlanes();
+            },
+            error: function (result) {
+                window.alert("Couldn't change '" + plane.name + "'! " + result.responseText);
+            }
+        });
+
+        }
+        
+    };
+
+   
+   var toFuel = function (plane) {
+        if(plane.fuel >= 5){
+            window.alert(plane.name + " is full");
+        }else {
+            var planeFuel = plane.fuel + 2;
+        $.ajax({
+            url: plane["_links"]["self"]["href"],
+            type: "patch",
+            data: JSON.stringify({
+               fuel: planeFuel
+            }),
+            contentType: "application/json",
+            success: function (result) {
+                window.alert(plane.name + " has is fueling ");
+                getPlanes();
+            },
+            error: function (result) {
+                window.alert("Couldn't change '" + plane.name + "'! " + result.responseText);
+            }
+        });
+
+        }
+        
+    };
+
+     var deletePlane = function (plane) {
+        if (window.confirm("Are you sure you want to delete '" + plane.name + "'?")) {
+            $.ajax({
+                url: plane["_links"]["self"]["href"],
+                type: "delete",
+                success: function (result) {
+                    getPlanes();
+                },
+                error: function (result) {
+                    window.alert("Couldn't delete '" + plane.name + "'! " + result.responseText);
+                }
+            });
+        }
+    };
+
+</script>
+</body>
+</html>
